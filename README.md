@@ -1,56 +1,33 @@
 # API-PRODUCTS
 
-🛠️ Tecnologias Utilizadas
-PHP 8.x
+No seu VS Code, crie um arquivo chamado `README.md` na **raiz** do seu projeto (no mesmo lugar onde está o `.htaccess`) e cole o conteúdo abaixo:
 
-Slim Framework 4 (Micro-framework para rotas e middleware)
+```markdown
+# 🚀 API RESTful de Produtos - Slim Framework 4
 
-Slim PSR-7 (Implementação das mensagens HTTP)
+Uma API RESTful simplificada para gerenciamento de produtos (CRUD), construída em PHP utilizando o **Slim Framework 4** e persistência de dados em banco de dados **MySQL** via **PDO**. Desenvolvido em ambiente local com o **Laragon**.
 
-PDO (PHP Data Objects) (Abstração e segurança na conexão com o banco)
+## 📌 Funcionalidades
 
-MySQL / MariaDB (Armazenamento dos dados)
+A API possui os 4 métodos HTTP principais (GET, POST, PUT, DELETE) mapeados para gerenciar o recurso `produtos`:
 
-Laragon (Ambiente de desenvolvimento local)
+- **`GET /api/produtos`**: Lista todos os produtos cadastrados no banco de dados.
+- **`GET /api/produtos/{id}`**: Busca os detalhes de um produto específico através do ID.
+- **`POST /api/produtos`**: Cadastra um novo produto (espera um corpo em formato JSON).
+- **`PUT /api/produtos/{id}`**: Atualiza os dados de um produto existente baseado no ID.
+- **`DELETE /api/produtos/{id}`**: Remove um produto do banco de dados baseado no ID.
 
-Postman (Ferramenta para testes de requisições HTTP)
+---
 
-⚙️ Como Configurar e Rodar o Projeto Localmente
-1. Pré-requisitos
-Certifique-se de ter instalado em sua máquina:
+## 📁 Estrutura do Projeto
 
-Laragon (ou outro ambiente como XAMPP/Wamp)
-
-Composer
-
-2. Clonar ou mover para o diretório raiz
-Mova a pasta API-PRODUCTS para o diretório de projetos do seu servidor local (no Laragon, o caminho padrão é C:\\laragon\\www\\).
-
-3. Instalar Dependências
-Abra o terminal dentro da pasta do projeto (C:\\laragon\\www\\API-PRODUCTS) e execute o comando:
-
-Bash
-composer install
-Caso esteja criando do zero, o comando utilizado foi composer require slim/slim:"4.*" slim/psr7.
-
-4. Configurar o Banco de Dados
-Acesse o seu gerenciador do MySQL (como o phpMyAdmin em http://localhost/phpmyadmin6/).
-
-Crie um banco de dados chamado produtos.
-
-Vá até a aba SQL e execute o seguinte script para criar a tabela:
-
-SQL
-CREATE TABLE IF NOT EXISTS `produtos` (
-  `id` INT AUTO_INCREMENT PRIMARY KEY,
-  `nome` VARCHAR(150) NOT NULL,
-  `preco` DECIMAL(10,2) NOT NULL,
-  `criado_em` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-Verifique se o arquivo src/conexao.php está com as credenciais corretas do seu ambiente local:
-
-PHP
-$host = '127.0.0.1';
-$dbname = 'produtos';
-$user = 'root';
-$password = ''; // Padrão vazio no Laragon
+```text
+API-PRODUCTS/
+├── public/
+│   └── index.php       # Ponto de entrada da aplicação (Configuração do Slim e Rotas)
+├── src/
+│   └── conexao.php     # Script de conexão com o banco de dados via PDO
+├── vendor/             # Dependências instaladas pelo Composer
+├── .htaccess           # Configuração de reescrita de URL para o Apache do Laragon
+├── composer.json       # Definição de dependências do projeto
+└── README.md           # Documentação do projeto
