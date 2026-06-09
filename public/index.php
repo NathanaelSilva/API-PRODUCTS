@@ -4,11 +4,10 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../src/conexao.php'; // Importa a função de conexão
+require __DIR__ . '/../src/conexao.php';
 
 $app = AppFactory::create();
 
-// 🛑 ADICIONE ESTA LINHA AQUI EMBAIXO (Ajuste o nome exato da sua pasta):
 $app->setBasePath('/API-PRODUCTS');
 
 $app->addBodyParsingMiddleware();
@@ -16,9 +15,6 @@ $app->addRoutingMiddleware();
 $app->addErrorMiddleware(true, true, true);
 
 
-// ----------------------------------------------------
-// MÉTODO GET: Listar todos os produtos
-// ----------------------------------------------------
 $app->get('/api/produtos', function (Request $request, Response $response) {
     try {
         $db = getConexao();
@@ -33,7 +29,6 @@ $app->get('/api/produtos', function (Request $request, Response $response) {
     }
 });
 
-// Buscar apenas um produto por ID
 $app->get('/api/produtos/{id}', function (Request $request, Response $response, array $args) {
     $id = $args['id'];
     try {
@@ -56,13 +51,9 @@ $app->get('/api/produtos/{id}', function (Request $request, Response $response, 
     }
 });
 
-// ----------------------------------------------------
-// MÉTODO POST: Inserir um produto
-// ----------------------------------------------------
 $app->post('/api/produtos', function (Request $request, Response $response) {
     $dados = $request->getParsedBody();
-    
-    // Validação simples
+
     if (empty($dados['nome']) || empty($dados['preco'])) {
         $response->getBody()->write(json_encode(["mensagem" => "Campos obrigatórios ausentes"]));
         return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
@@ -76,7 +67,6 @@ $app->post('/api/produtos', function (Request $request, Response $response) {
         $stmt->bindParam(':preco', $dados['preco']);
         $stmt->execute();
 
-        // Pega o ID que o banco acabou de gerar
         $idGerado = $db->lastInsertId();
         $dados['id'] = $idGerado;
 
@@ -93,17 +83,13 @@ $app->post('/api/produtos', function (Request $request, Response $response) {
     }
 });
 
-// ----------------------------------------------------
-// MÉTODO PUT: Atualizar um produto
-// ----------------------------------------------------
 $app->put('/api/produtos/{id}', function (Request $request, Response $response, array $args) {
     $id = $args['id'];
     $dados = $request->getParsedBody();
 
     try {
         $db = getConexao();
-        
-        // Primeiro verifica se o produto existe
+
         $stmtCheck = $db->prepare("SELECT id FROM produtos WHERE id = :id");
         $stmtCheck->execute([':id' => $id]);
         if (!$stmtCheck->fetch()) {
@@ -111,7 +97,6 @@ $app->put('/api/produtos/{id}', function (Request $request, Response $response, 
             return $response->withHeader('Content-Type', 'application/json')->withStatus(404);
         }
 
-        // Executa o update
         $sql = "UPDATE produtos SET nome = :nome, preco = :preco WHERE id = :id";
         $stmt = $db->prepare($sql);
         $stmt->execute([
@@ -133,16 +118,12 @@ $app->put('/api/produtos/{id}', function (Request $request, Response $response, 
     }
 });
 
-// ----------------------------------------------------
-// MÉTODO DELETE: Eliminar um produto
-// ----------------------------------------------------
 $app->delete('/api/produtos/{id}', function (Request $request, Response $response, array $args) {
     $id = $args['id'];
 
     try {
         $db = getConexao();
-        
-        // Verifica se existe antes de apagar
+
         $stmtCheck = $db->prepare("SELECT id FROM produtos WHERE id = :id");
         $stmtCheck->execute([':id' => $id]);
         if (!$stmtCheck->fetch()) {
