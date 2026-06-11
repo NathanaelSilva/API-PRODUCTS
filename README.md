@@ -1,6 +1,5 @@
 # API-PRODUCTS
 
-No seu VS Code, crie um arquivo chamado `README.md` na **raiz** do seu projeto (no mesmo lugar onde está o `.htaccess`) e cole o conteúdo abaixo:
 
 ```markdown
 # 🚀 API RESTful de Produtos - Slim Framework 4
